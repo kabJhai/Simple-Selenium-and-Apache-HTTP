@@ -21,6 +21,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
@@ -38,7 +39,7 @@ public class HttpCRUD {
     public static void main(String [] args) throws URISyntaxException{
         try {
             httpclient = HttpClients.createDefault();
-            create();
+            update("2");
             httpclient.close();
         } catch (IOException ex) {
             Logger.getLogger(HttpCRUD.class.getName()).log(Level.SEVERE, null, ex);
@@ -57,12 +58,11 @@ public class HttpCRUD {
             try {
                 System.out.println(response.getStatusLine());
                 HttpEntity entity = response.getEntity();
-                // do something useful with the response body
-                // and ensure it is fully consumed
                 System.out.println(response.getStatusLine());
                 System.out.println("RESPONSE JSON");
                 entity.writeTo(System.out);
                 System.out.println("");
+                EntityUtils.consume(entity);
             } finally {
                 response.close();
             }   
@@ -80,6 +80,7 @@ public class HttpCRUD {
                 System.out.println("RESPONSE JSON");
                 entity.writeTo(System.out);
                 System.out.println("");
+                EntityUtils.consume(entity);
         } finally {
                 response.close();
         }
@@ -87,4 +88,24 @@ public class HttpCRUD {
     }
     
     //Update
+    public static void update(String id) throws IOException{
+            HttpPatch httpPatch = new HttpPatch("https://reqres.in/api/users/"+id);
+            List <NameValuePair> nvps = new ArrayList <NameValuePair>();
+            nvps.add(new BasicNameValuePair("name", "Kebede"));
+            nvps.add(new BasicNameValuePair("job", "Merchant"));
+            httpPatch.setEntity(new UrlEncodedFormEntity(nvps));
+            CloseableHttpResponse response = httpclient.execute(httpPatch);
+
+            try {
+                System.out.println(response.getStatusLine());
+                HttpEntity entity = response.getEntity();
+                System.out.println(response.getStatusLine());
+                System.out.println("RESPONSE JSON");
+                entity.writeTo(System.out);
+                System.out.println("");
+                EntityUtils.consume(entity);
+            } finally {
+                response.close();
+            }   
+    }
 }
