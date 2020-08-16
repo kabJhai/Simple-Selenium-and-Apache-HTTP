@@ -11,6 +11,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 /**
  *
@@ -28,19 +29,16 @@ public class GoogleSearch {
         WebElement searchBox = driver.findElement(By.name("q"));
         searchBox.sendKeys("Software Automated Testing");
         searchBox.submit();
-//        WebElement searchButton = driver.findElement(By.name("btnK"));
-//        searchButton.click();
-
-        List<WebElement> results =  driver.findElements(By.className("g"));
-        if(results.size() > 0){
-            WebElement firstResult = results.get(0);
-            WebElement resultOneLink = firstResult.findElement(By.tagName("a"));
-            resultOneLink.click();
+        driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+        
+//        Get list of results containing the keyword software
+        List<WebElement> links = driver.findElements(By.partialLinkText("Software"));
+        if(links.size() > 0){
+            links.get(0).click();
             Thread.sleep(5000);
         }else{
-            
+            System.out.println("No elements found");
         }
-        
-        
+            driver.quit();
     }
 }
