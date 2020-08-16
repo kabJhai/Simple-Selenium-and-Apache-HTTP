@@ -38,7 +38,7 @@ public class HttpCRUD {
     public static void main(String [] args) throws URISyntaxException{
         try {
             httpclient = HttpClients.createDefault();
-            read();
+            create();
             httpclient.close();
         } catch (IOException ex) {
             Logger.getLogger(HttpCRUD.class.getName()).log(Level.SEVERE, null, ex);
@@ -56,11 +56,13 @@ public class HttpCRUD {
 
             try {
                 System.out.println(response.getStatusLine());
-                HttpEntity entity2 = response.getEntity();
+                HttpEntity entity = response.getEntity();
                 // do something useful with the response body
                 // and ensure it is fully consumed
-                EntityUtils.consume(entity2);
                 System.out.println(response.getStatusLine());
+                System.out.println("RESPONSE JSON");
+                entity.writeTo(System.out);
+                System.out.println("");
             } finally {
                 response.close();
             }   
@@ -77,9 +79,12 @@ public class HttpCRUD {
                 HttpEntity entity = response.getEntity();
                 System.out.println("RESPONSE JSON");
                 entity.writeTo(System.out);
-            } finally {
+                System.out.println("");
+        } finally {
                 response.close();
         }
                 
     }
+    
+    //Update
 }
